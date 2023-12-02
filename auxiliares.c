@@ -3,165 +3,155 @@
 #include <string.h>
 #include "auxiliares.h"
 
-void limpaTela()
+
+//Cadastrar novos usuarios
+void cadastra(FILE *arq, Usuario cliente[], int *numUsuario)
 {
-    printf("\033c");
-    printf("\033[H\033[J");
-}
+    printf("\n\nCadastrar Usuario:\n");
 
-int Registra()
-{
-    FILE *arq;
+    printf("Nome: ");
+    scanf("%s", cliente[*numUsuario].nome);
 
-    // limpaTela();
+    printf("\nCPF: ");
+    scanf("%s", cliente[*numUsuario].cpf);
 
-    arq = fopen("Dados_login.txt", "w");
-    if (arq == NULL)
+    printf("\nSenha: ");
+    scanf("%s", cliente[*numUsuario].senha);
+
+    printf("\n\nUsuario cadastrado com sucesso!\n");
+
+    arq = fopen("cliente.txt", "a");
+    if(arq == NULL) //Verifica se abriu o arquivo corretamente.
     {
-        printf("\n---    Falha ao inicializar o arquivo de Login     ---");
-        exit(1);
+        printf("\n\nErro ao armazenar os dados!");
+        exit(-1);
     }
 
-    printf("\nInforme o seu nome de usuario:\n");
-    scanf("%s", dados.usuario);
-    fflush(stdin);
-
-    printf("\n\ninforme a sua senha:\n");
-    scanf("%d", &dados.senha);
-    fflush(stdin);
-
-    fwrite(&dados, sizeof(dados), 1, arq);
+    fwrite(cliente, sizeof(Usuario), 1, arq);
 
     fclose(arq);
-
-    return 0;
 }
 
-void login()
+
+//Verificar Login de usuarios ja cadastrados
+int login(FILE *arq, Usuario cliente[])
 {
-    int sucesso = 0;
-    int compUsu, compPass = 2;
-    FILE *arq;
+    char cpf[12];
+    char senha[8];
+    int n = 0, i;
+    
+    printf("\n\n---     FAZER LOGIN     ---\n");
+    printf("CPF: ");
+    scanf("%s", cpf);
+    
+    printf("\nSenha: ");
+    scanf("%s",senha);
 
-    do
+    arq = fopen("cliente.txt", "r");
+    if(arq == NULL) //Verifica se abriu o arquivo corretamente
     {
-        // limpaTela();
+        printf("\n\nErro ao abrir o arquivo!");
+        exit(-1);
+    }
 
-        printf("Informe o seu nome de usuario:\n");
-        scanf("%s", dados.usuario);
-        fflush(stdin);
+    //recebe os dados do arquivo de login
+    n = fread(cliente, sizeof(Usuario), 10, arq);
 
-        printf("\n\ninforme a sua senha:\n");
-        scanf("%d", &dados.senha);
-        fflush(stdin);
-
-        arq = fopen("Dados_login.txt", "r");
-
-        fread(&aux, sizeof(aux), 1, arq);
-
-        printf("\nusuario dados: %s", dados.usuario);
-        printf("\nusuario aux: %s", aux.usuario);
-
-        printf("\nsenha dados: %d", dados.senha);
-        printf("\nsenha aux: %d", aux.senha);
-
-        // Verifica os dados de Login
-        compUsu = strcmp(aux.usuario, dados.usuario);
-
-        if (aux.senha == dados.senha)
-            compPass = 0;
-
-        if (compUsu == 0 && compPass == 0)
+    //percorre todo os dados para verificar se os dados de login estao corretos.
+    for(i = 0; i < n; i++)
+    {
+        if(strcmp(cliente[i].cpf, cpf) == 0 && strcmp(cliente[i].senha, senha) == 0)
         {
-            printf("\n\nLogin realizado com sucesso!\n\n");
-            sucesso = 1;
-        }
-        else
-            printf("\n\nUsuario ou senha invalidos!\n\n");
-
-    } while (sucesso == 0);
-
+            printf("\n\nLogin realizado com sucesso!");
+            return 1;    
+        }        
+    }
+    
+    printf("CPF ou SENHA incorretos. Tente novamente.\n");
     fclose(arq);
+
+    return -1;
 }
 
-void reserva()
+
+//Funcao para a reserva de quartos.
+void reservaQuarto(FILE *arqQuarto)
 {
-    FILE *arq;
+    int i, n;
+    int quartoReservar;
 
-    // limpaTela();
-
-    printf("\nNome:\n");
-    scanf("%s", s.nome);
-    fflush(stdin);
-
-    printf("\nE-mail:\n");
-    scanf("%s", s.email);
-    fflush(stdin);
-
-    printf("\nNumero de telefone:\n");
-    scanf("%d", &s.telefone);
-    fflush(stdin);
-
-    printf("\nQual o dia ira entrar:\n");
-    scanf("%s", s.diaEntra);
-    fflush(stdin);
-
-    printf("\nQuantos dias ira ficar:\n");
-    scanf("%d", &s.periodo);
-    fflush(stdin);
-
-    printf("\n\nEscolha um quarto a ser reservado:\n");
-    scanf("%d", &s.numQuarto);
-    fflush(stdin);
-
-    arq = fopen("dados_cliente.txt", "w");
-    if (arq == NULL)
+    arqQuarto = fopen("quartos.txt", "r");
+    if(arqQuarto == NULL)//Verifica se o arquivo ja existe.
     {
-        printf("\n\nErro ao armarzenar dados do usuario!!\n\n");
-        exit(1);
-    }
+        fclose(arqQuarto);
 
-    fwrite(&s, sizeof(s), 1, arq);
-    fflush(stdin);
-    fclose(arq);
-}
-
-void gerencia()
-{
-    FILE *arq;
-    int op;
-
-    // limpaTela();
-
-    arq = fopen("dados_cliente.txt", "r");
-    if (arq == NULL)
-    {
-        printf("\n\nErro ao ler os dados do cliente!!\n\n");
-        exit(1);
-    }
-
-    printf("\n\n---     Gerenciar quartos   ---\n\n");
-    printf("[1] - Visualizar quartos reservados\n");
-    scanf("\n%d", &op);
-
-    switch (op)
-    {
-    case 1:
-        printf("\nQuartos reservados no seu nome:\n\n");
-        printf("\n----------------------------------------------------------------------------------------\n");
-        printf("NOME");
-        printf("\t\tE-MAIL");
-        printf("\t\tTELEFONE");
-        printf("\tDIA DE CHEGADA");
-        printf("\t\tPERIODO");
-        printf("\t\tQUARTO");
-        printf("\n----------------------------------------------------------------------------------------\n");
-
-        while (fread(&s, sizeof(s), 1, arq) == 1)
+        arqQuarto = fopen("quartos.txt", "w");
+        if(arqQuarto == NULL) //Verifica se o arquivo abriu corretamente.
         {
-            printf("%s\t\t %s\t\t %d\t %s\t\t %d\t\t %d\t", s.nome, s.email, s.telefone,
-                   s.diaEntra, s.periodo, s.numQuarto);
+            printf("\nErro ao criar o arquivo dos quartos...\n");
+            exit(-1);
         }
-        fclose(arq);
+
+        //Inicializa o arquivo com todos os quartos disponíveis.
+        for(i = 0; i < 5; i++)
+        {
+            quartos[i].numero = i + 1;
+            quartos[i].disponivel = 1;
+            fwrite(&quartos[i], sizeof(Quarto), 1, arqQuarto);
+            
+        }
+        fclose(arqQuarto);
+    
     }
+
+    arqQuarto = fopen("quartos.txt", "r");
+    if(arqQuarto == NULL) //Verifica se o arquivo abriu corretamente.
+    {
+        printf("\nErro ao abrir o arquivo!");
+        exit(-1);
+    }
+
+    //Recebe os dados dos quartos.
+    n = fread(quartos, sizeof(Quarto), 10, arqQuarto);
+
+    //Imprime os quartos disponíveis.
+    for(i = 0; i < n; i++)
+    {
+        if(quartos[i].disponivel == 1){
+            printf("\nQuarto numero: %d\n", quartos[i].numero);
+            printf("Quarto disponivel: %d\n", quartos[i].disponivel);
+        }
+    }
+    fclose(arqQuarto);
+
+    printf("Digite o numero do quarto que deseja reservar: \n");
+    scanf("%d", &quartoReservar);
+
+    arqQuarto = fopen("quartos.txt", "r+");
+    if(arqQuarto == NULL) //Verifica se o arquivo abriu corretamente.
+    {
+        printf("\nErro ao abrir o arquivo!");
+        exit(-1);
+    }
+
+    //Percorre os quartos para fazer a reserva.
+    for(i = 0; i < 5; i++)
+    {
+        if(quartos[i].numero == quartoReservar)
+        {
+            if(quartos[i].disponivel == 1)
+            {
+                quartos[i].numero = i + 1;
+                quartos[i].disponivel = 0;
+                printf("\nQuarto %d reservado com sucesso!", quartoReservar);
+                fseek(arqQuarto, i * 4, SEEK_SET);
+                fwrite(&quartos[i], sizeof(Quarto), 1, arqQuarto);
+            }
+            else
+            {
+                printf("\nQuarto nao disponivel. Escolha outro!\n");
+            }
+        }
+    }
+    fclose(arqQuarto);
 }
