@@ -1,29 +1,26 @@
 #ifndef AUXILIARES_H
 #define AUXILIARES_H
 
-struct cliente
-{
-    char usuario[10];
-    int senha;
-};
+//struct para os dados do Usuario
+typedef struct{
+    char nome[30];
+    char cpf[12];
+    char senha[8];
+}Usuario;
 
-struct cliente dados;
-struct cliente aux;
+Usuario cliente[5];
 
-struct dadosCliente
-{
-    char nome[20];
-    char email[20];
-    int telefone;
-    char diaEntra[10];
-    int periodo;
-    int numQuarto;
-} s;
+//Struct para os Quartos
+typedef struct{
+    short int numero;
+    short int disponivel;
+}Quarto;
 
-void limpaTela();
-int Registra();
-void login();
-void reserva();
-void gerencia();
+Quarto quartos[5];
+
+//FUNÇÕES
+void cadastra(FILE *arq, Usuario cliente[], int *numUsuario);
+int login(FILE *arq, Usuario cliente[]);
+void reservaQuarto(FILE *arqQuarto);
 
 #endif
