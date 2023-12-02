@@ -96,7 +96,7 @@ void reservaQuarto(FILE *arqQuarto)
         for(i = 0; i < 5; i++)
         {
             quartos[i].numero = i + 1;
-            quartos[i].disponivel = 1;
+            quartos[i].disponivel = 1
             fwrite(&quartos[i], sizeof(Quarto), 1, arqQuarto);
             
         }
@@ -118,8 +118,7 @@ void reservaQuarto(FILE *arqQuarto)
     for(i = 0; i < n; i++)
     {
         if(quartos[i].disponivel == 1){
-            printf("\nQuarto numero: %d\n", quartos[i].numero);
-            printf("Quarto disponivel: %d\n", quartos[i].disponivel);
+            printf("\nQuarto [%d]\n", quartos[i].numero);
         }
     }
     fclose(arqQuarto);
