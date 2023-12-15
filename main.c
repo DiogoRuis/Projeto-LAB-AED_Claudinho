@@ -74,6 +74,13 @@ int main()
         case 3: 
             verificaQuartosDisponiveis(&arqQuarto);
             break;
+        case 4:
+                printf("\n\nSaindo do programa...\n\n");
+                exit(0);
+        default:
+                printf("\n\nOpção inválida!\n");
+                break;
+            
     }
 }while while (opcao != 4); // Repete enquanto a opção não for sair (opção 4).
 
