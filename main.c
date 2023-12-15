@@ -1,14 +1,14 @@
 /*
     Sistema para reserva de quarto de hotéis.
 
-    Integrantes: José Ulisses, Diogo Ruis, Cauan Reis, Mateus militão;
+    Integrantes: José Ulisses, Diogo Ruis, Cauan Reis, Matheus Militao;
 
     Sistema de Arquivo feito por jose ulisses;
-    Sistema do Menu feito por Diogo Ruis;
+    Sistema do Menu feito por Diogo Ruis e Matheus Militao;
 
     GitHub: 
 
-    Modificado em: 02/12/2023
+    Modificado em: 15/12/2023
 */
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,7 +54,7 @@ int main()
     }while(loginRealizado != 1); //Repete enquanto o usuario não realizar o login.
 
     opcao = 0;
-
+    do{
     printf("\n\n---    MENU    ---\n\n");
     printf("[1] - Reservar um  quarto\n");
     printf("[2] - Remover reserva de um quarto\n");
@@ -68,5 +68,14 @@ int main()
         case 1:
             reservaQuarto(&arqQuarto);
             break;
+        case 2: 
+            removeReserva(&arqQuarto);
+            break;
+        case 3: 
+            verificaQuartosDisponiveis(&arqQuarto);
+            break;
     }
+}while while (opcao != 4); // Repete enquanto a opção não for sair (opção 4).
+
+return 0;
 }
