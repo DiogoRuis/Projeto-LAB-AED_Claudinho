@@ -154,3 +154,94 @@ void reservaQuarto(FILE *arqQuarto)
     }
     fclose(arqQuarto);
 }
+
+// Função para remover reserva de um quarto.
+void removeReserva(FILE *arqQuarto)
+{
+    int i, n;
+    int quartoRemover;
+
+    arqQuarto = fopen("quartos.txt", "r");
+    if (arqQuarto == NULL) // Verifica se o arquivo já existe.
+    {
+        fclose(arqQuarto);
+
+        printf("\nArquivo de quartos não existe. Não há reservas para remover.\n");
+        return;
+    }
+
+    // Recebe os dados dos quartos.
+    n = fread(quartos, sizeof(Quarto), 10, arqQuarto);
+    fclose(arqQuarto);
+
+    // Imprime os quartos reservados.
+    printf("\nQuartos Reservados:\n");
+    for (i = 0; i < n; i++)
+    {
+        if (quartos[i].disponivel == 0)
+        {
+            printf("Quarto [%d]\n", quartos[i].numero);
+        }
+    }
+
+    printf("\nDigite o número do quarto que deseja remover a reserva: \n");
+    scanf("%d", &quartoRemover);
+
+    arqQuarto = fopen("quartos.txt", "r+");
+    if (arqQuarto == NULL) // Verifica se o arquivo abriu corretamente.
+    {
+        printf("\nErro ao abrir o arquivo!");
+        exit(-1);
+    }
+
+    // Percorre os quartos para remover a reserva.
+    for (i = 0; i < n; i++)
+    {
+        if (quartos[i].numero == quartoRemover)
+        {
+            if (quartos[i].disponivel == 0)
+            {
+                quartos[i].numero = i + 1;
+                quartos[i].disponivel = 1;
+                printf("\nReserva do Quarto %d removida com sucesso!", quartoRemover);
+                fseek(arqQuarto, i * sizeof(Quarto), SEEK_SET);
+                fwrite(&quartos[i], sizeof(Quarto), 1, arqQuarto);
+            }
+            else
+            {
+                printf("\nQuarto não está reservado. Nada a ser removido!\n");
+            }
+        }
+    }
+    fclose(arqQuarto);
+}
+
+// Função para verificar quartos disponíveis.
+void verificaQuartosDisponiveis(FILE *arqQuarto)
+{
+    int i, n;
+
+    arqQuarto = fopen("quartos.txt", "r");
+    if (arqQuarto == NULL) // Verifica se o arquivo já existe.
+    {
+        fclose(arqQuarto);
+
+        printf("\nArquivo de quartos não existe. Não há quartos disponíveis.\n");
+        return;
+    }
+
+    // Recebe os dados dos quartos.
+    n = fread(quartos, sizeof(Quarto), 10, arqQuarto);
+    fclose(arqQuarto);
+
+    // Imprime os quartos disponíveis.
+    printf("\nQuartos Disponíveis:\n");
+    for (i = 0; i < n; i++)
+    {
+        if (quartos[i].disponivel == 1)
+        {
+            printf("Quarto [%d]\n", quartos[i].numero);
+        }
+    }
+}
+
