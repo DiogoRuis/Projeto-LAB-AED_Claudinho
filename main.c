@@ -3,7 +3,7 @@
 
     Integrantes: José Ulisses, Diogo Ruis, Cauan Reis, Matheus Militao;
 
-    Sistema de Arquivo feito por jose ulisses;
+    Sistema de Arquivo feito por Jose Ulisses;
     Sistema do Menu feito por Diogo Ruis e Matheus Militao;
 
     GitHub: 
