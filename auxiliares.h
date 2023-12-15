@@ -22,5 +22,7 @@ Quarto quartos[5];
 void cadastra(FILE *arq, Usuario cliente[], int *numUsuario);
 int login(FILE *arq, Usuario cliente[]);
 void reservaQuarto(FILE *arqQuarto);
+void removeReserva(FILE *arqQuarto);
+void verificaQuartosDisponiveis(FILE *arqQuarto);
 
 #endif
